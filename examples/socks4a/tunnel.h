@@ -75,7 +75,7 @@ class Tunnel : public boost::enable_shared_from_this<Tunnel>,
           boost::bind(&Tunnel::onHighWaterMarkWeak,
                       boost::weak_ptr<Tunnel>(shared_from_this()), kClient, _1, _2),
           1024*1024);
-      serverConn_->setContext(conn);
+      serverConn_->setContext(conn);// 等价于 把与客户端的conn context 设置为client conn_
       serverConn_->startRead();
       clientConn_ = conn;
       if (serverConn_->inputBuffer()->readableBytes() > 0)

@@ -178,12 +178,12 @@ void TimerQueue::handleRead()
 {
   loop_->assertInLoopThread();
   Timestamp now(Timestamp::now());
-  readTimerfd(timerfd_, now);
+  readTimerfd(timerfd_, now);      //水平触发，所以要调用read,防止下次立刻触发可读
 
-  std::vector<Entry> expired = getExpired(now);
+  std::vector<Entry> expired = getExpired(now);   //同时删除在两个队列中的timer,如果同时到期，就会有很多timer，所以需要用数组
 
   callingExpiredTimers_ = true;
-  cancelingTimers_.clear();
+  cancelingTimers_.clear();                     //通过clear()调用timer析构函数
   // safe to callback outside critical section
   for (std::vector<Entry>::iterator it = expired.begin();
       it != expired.end(); ++it)
@@ -192,16 +192,16 @@ void TimerQueue::handleRead()
   }
   callingExpiredTimers_ = false;
 
-  reset(expired, now);
-}
-
+  reset(expired, now);                               //刚刚处理完的timer，如果有需要重复的计算好时间，重新插入
+}                                                    //不重复的delete掉
+                                                     //把队头的timer的fd 赋值给timerfd_
 std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now)
 {
   assert(timers_.size() == activeTimers_.size());
   std::vector<Entry> expired;
   Entry sentry(now, reinterpret_cast<Timer*>(UINTPTR_MAX));
   TimerList::iterator end = timers_.lower_bound(sentry);
-  assert(end == timers_.end() || now < end->first);
+  assert(end == timers_.end() || now < end->first);   //有可能相等吧？不可能相等的，因为key为entry,timer*地址肯定不相等
   std::copy(timers_.begin(), end, back_inserter(expired));
   timers_.erase(timers_.begin(), end);
 
@@ -245,7 +245,7 @@ void TimerQueue::reset(const std::vector<Entry>& expired, Timestamp now)
 
   if (nextExpire.valid())
   {
-    resetTimerfd(timerfd_, nextExpire);
+    resetTimerfd(timerfd_, nextExpire);   //让内核监控这个timefd,时间到fd可读
   }
 }
 

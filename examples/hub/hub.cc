@@ -63,7 +63,7 @@ class Topic : public muduo::copyable
   string topic_;
   string content_;
   Timestamp lastPubTime_;
-  std::set<TcpConnectionPtr> audiences_;
+  std::set<TcpConnectionPtr> audiences_;       //为啥用shared ptr,这个就是要拥有
 };
 
 class PubSubServer : boost::noncopyable

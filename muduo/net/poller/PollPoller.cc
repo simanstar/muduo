@@ -133,7 +133,7 @@ void PollPoller::removeChannel(Channel* channel)
     iter_swap(pollfds_.begin()+idx, pollfds_.end()-1);
     if (channelAtEnd < 0)
     {
-      channelAtEnd = -channelAtEnd-1;
+      channelAtEnd = -channelAtEnd-1;                //为什么负的话要先转成正的
     }
     channels_[channelAtEnd]->set_index(idx);
     pollfds_.pop_back();

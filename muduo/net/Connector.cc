@@ -142,8 +142,8 @@ void Connector::connecting(int sockfd)
   channel_->enableWriting();
 }
 
-int Connector::removeAndResetChannel()
-{
+int Connector::removeAndResetChannel()                 //这个channel已经利用完，向fd写数据看有没有返回错误，
+{                                                      //没有返回错误就证明已经连接成功
   channel_->disableAll();
   channel_->remove();
   int sockfd = channel_->fd();

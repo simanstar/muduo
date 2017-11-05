@@ -325,7 +325,7 @@ void TcpConnection::connectEstablished()
   loop_->assertInLoopThread();
   assert(state_ == kConnecting);
   setState(kConnected);
-  channel_->tie(shared_from_this());
+  channel_->tie(shared_from_this());        //暂时不清楚作用
   channel_->enableReading();
 
   connectionCallback_(shared_from_this());

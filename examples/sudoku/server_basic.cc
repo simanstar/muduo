@@ -47,7 +47,7 @@ class SudokuServer
   {
     LOG_DEBUG << conn->name();
     size_t len = buf->readableBytes();
-    while (len >= kCells + 2)
+    while (len >= kCells + 2)                              //为啥用while不用if
     {
       const char* crlf = buf->findCRLF();
       if (crlf)

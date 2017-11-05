@@ -117,6 +117,6 @@ void TcpServer::removeConnectionInLoop(const TcpConnectionPtr& conn)
   assert(n == 1);
   EventLoop* ioLoop = conn->getLoop();
   ioLoop->queueInLoop(
-      boost::bind(&TcpConnection::connectDestroyed, conn));
-}
-
+      boost::bind(&TcpConnection::connectDestroyed, conn));//为什么queueinloop,因为connectDestroyed里对loop里的数组操作，需要线程同步
+}                                                          //所以统一放到loop这个线程执行。为什么用bind，因为让TcpConnection复制到bind里
+                                                           //坚持到调用完TcpConnection::connectDestroyed才析构。

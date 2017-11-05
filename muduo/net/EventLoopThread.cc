@@ -48,8 +48,8 @@ EventLoop* EventLoopThread::startLoop()
     MutexLockGuard lock(mutex_);
     while (loop_ == NULL)
     {
-      cond_.wait();
-    }
+      cond_.wait();//先释放锁，然后陷入睡眠；从睡眠中醒来，获得锁（获取不到可能再次睡眠），从函数返回。
+    }              //为什么要搭配mutex使用，因为防止还没进入wait状态，条件变量已经notify,导致signal丢失。
   }
 
   return loop_;

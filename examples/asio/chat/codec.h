@@ -58,7 +58,7 @@ class LengthHeaderCodec : boost::noncopyable
     muduo::net::Buffer buf;
     buf.append(message.data(), message.size());
     int32_t len = static_cast<int32_t>(message.size());
-    int32_t be32 = muduo::net::sockets::hostToNetwork32(len);
+    int32_t be32 = muduo::net::sockets::hostToNetwork32(len);   //为什么要转成网络字节序，因为不同平台字节序不一致，统一转化
     buf.prepend(&be32, sizeof be32);
     conn->send(&buf);
   }

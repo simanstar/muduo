@@ -74,7 +74,7 @@ const struct sockaddr_in6* sockets::sockaddr_in6_cast(const struct sockaddr* add
   return static_cast<const struct sockaddr_in6*>(implicit_cast<const void*>(addr));
 }
 
-int sockets::createNonblockingOrDie(sa_family_t family)
+int sockets::createNonblockingOrDie(sa_family_t family)                      //非阻塞socket是什么？
 {
 #if VALGRIND
   int sockfd = ::socket(family, SOCK_STREAM, IPPROTO_TCP);
