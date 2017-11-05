@@ -36,12 +36,12 @@ Timestamp PollPoller::poll(int timeoutMs, ChannelList* activeChannels)
   Timestamp now(Timestamp::now());
   if (numEvents > 0)
   {
-    LOG_TRACE << numEvents << " events happended";
+    LOG_TRACE << numEvents << " events happened";
     fillActiveChannels(numEvents, activeChannels);
   }
   else if (numEvents == 0)
   {
-    LOG_TRACE << " nothing happended";
+    LOG_TRACE << " nothing happened";
   }
   else
   {
@@ -100,6 +100,7 @@ void PollPoller::updateChannel(Channel* channel)
     assert(0 <= idx && idx < static_cast<int>(pollfds_.size()));
     struct pollfd& pfd = pollfds_[idx];
     assert(pfd.fd == channel->fd() || pfd.fd == -channel->fd()-1);
+    pfd.fd = channel->fd();
     pfd.events = static_cast<short>(channel->events());
     pfd.revents = 0;
     if (channel->isNoneEvent())

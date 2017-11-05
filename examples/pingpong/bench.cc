@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <sys/resource.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 using namespace muduo;
 using namespace muduo::net;
@@ -140,4 +141,6 @@ int main(int argc, char* argv[])
     it->disableAll();
     it->remove();
   }
+  g_channels.clear();
 }
+
